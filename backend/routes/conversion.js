@@ -6,8 +6,8 @@ const {
   removeAllConversions,
 } = require("../controllers/conversion");
 
-router.get("/roman/:inputValue", convertRomanToArabic);
-router.get("/arabic/:inputValue", convertArabicToRoman);
+router.get("/roman/:inputValue", convertArabicToRoman);
+router.get("/arabic/:inputValue", convertRomanToArabic);
 router.get("/all", getAllConversions);
 router.delete("/remove", removeAllConversions);
 

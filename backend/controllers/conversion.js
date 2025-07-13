@@ -6,6 +6,46 @@ const { messages, codeStatuses } = require("../utils/constants");
 const convertRomanToArabic = async (req, res, next) => {
   try {
     const { inputValue } = req.params;
+
+    const existingConversion = await Conversion.findOne({
+      inputValue: inputValue.toUpperCase(),
+      conversionType: "roman-to-arabic",
+    });
+
+    if (existingConversion) {
+      return res.json({
+        inputValue: inputValue,
+        convertedValue: parseInt(existingConversion.convertedValue, 10),
+      });
+    }
+
+    const arabicResult = romanToArabic(inputValue);
+    if (!arabicResult) {
+      throw new IncorrectDataError(messages.incorrectRomanNumeral);
+    }
+
+    await Conversion.create({
+      inputValue: inputValue.toUpperCase(),
+      convertedValue: arabicResult.toString(),
+      conversionType: "roman-to-arabic",
+    });
+
+    res.json({
+      inputValue: inputValue,
+      convertedValue: arabicResult,
+    });
+  } catch (err) {
+    if (err.name === "IncorrectDataError") {
+      next(err);
+    } else {
+      next(err);
+    }
+  }
+};
+
+const convertArabicToRoman = async (req, res, next) => {
+  try {
+    const { inputValue } = req.params;
     const numValue = parseInt(inputValue, 10);
 
     if (isNaN(numValue)) {
@@ -38,46 +78,6 @@ const convertRomanToArabic = async (req, res, next) => {
     res.json({
       inputValue: numValue,
       convertedValue: romanResult,
-    });
-  } catch (err) {
-    if (err.name === "IncorrectDataError") {
-      next(err);
-    } else {
-      next(err);
-    }
-  }
-};
-
-const convertArabicToRoman = async (req, res, next) => {
-  try {
-    const { inputValue } = req.params;
-
-    const existingConversion = await Conversion.findOne({
-      inputValue: inputValue.toUpperCase(),
-      conversionType: "roman-to-arabic",
-    });
-
-    if (existingConversion) {
-      return res.json({
-        inputValue: inputValue,
-        convertedValue: parseInt(existingConversion.convertedValue, 10),
-      });
-    }
-
-    const arabicResult = romanToArabic(inputValue);
-    if (!arabicResult) {
-      throw new IncorrectDataError(messages.incorrectRomanNumeral);
-    }
-
-    await Conversion.create({
-      inputValue: inputValue.toUpperCase(),
-      convertedValue: arabicResult.toString(),
-      conversionType: "roman-to-arabic",
-    });
-
-    res.json({
-      inputValue: inputValue,
-      convertedValue: arabicResult,
     });
   } catch (err) {
     if (err.name === "IncorrectDataError") {
