@@ -25,7 +25,7 @@ describe("API tests", () => {
         conversionType: "arabic-to-roman",
       });
 
-      const response = await request(app).get("/roman/5").expect(200);
+      const response = await request(app).get("/api/roman/5").expect(200);
 
       expect(response.body).toEqual({
         inputValue: 5,
@@ -34,11 +34,11 @@ describe("API tests", () => {
     });
 
     test("should return 400 for invalid number", async () => {
-      await request(app).get("/roman/abc").expect(400);
+      await request(app).get("/api/roman/abc").expect(400);
     });
 
     test("should return 400 for number greater than 3999", async () => {
-      await request(app).get("/roman/4000").expect(400);
+      await request(app).get("/api/roman/4000").expect(400);
     });
 
     test("should return cached result", async () => {
@@ -48,7 +48,7 @@ describe("API tests", () => {
         conversionType: "arabic-to-roman",
       });
 
-      const response = await request(app).get("/roman/10").expect(200);
+      const response = await request(app).get("/api/roman/10").expect(200);
 
       expect(response.body).toEqual({
         inputValue: 10,
@@ -66,7 +66,7 @@ describe("API tests", () => {
         conversionType: "roman-to-arabic",
       });
 
-      const response = await request(app).get("/arabic/V").expect(200);
+      const response = await request(app).get("/api/arabic/V").expect(200);
 
       expect(response.body).toEqual({
         inputValue: "V",
@@ -82,7 +82,7 @@ describe("API tests", () => {
         conversionType: "roman-to-arabic",
       });
 
-      const response = await request(app).get("/arabic/v").expect(200);
+      const response = await request(app).get("/api/arabic/v").expect(200);
 
       expect(response.body).toEqual({
         inputValue: "v",
@@ -91,7 +91,7 @@ describe("API tests", () => {
     });
 
     test("should return 400 for invalid Roman numeral", async () => {
-      await request(app).get("/arabic/ABC").expect(400);
+      await request(app).get("/api/arabic/ABC").expect(400);
     });
 
     test("should return cached result", async () => {
@@ -101,7 +101,7 @@ describe("API tests", () => {
         conversionType: "roman-to-arabic",
       });
 
-      const response = await request(app).get("/arabic/X").expect(200);
+      const response = await request(app).get("/api/arabic/X").expect(200);
 
       expect(response.body).toEqual({
         inputValue: "X",
@@ -133,7 +133,7 @@ describe("API tests", () => {
         sort: jest.fn().mockResolvedValue(mockConversions),
       });
 
-      const response = await request(app).get("/all").expect(200);
+      const response = await request(app).get("/api/all").expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
       expect(response.body).toHaveLength(2);
@@ -144,7 +144,7 @@ describe("API tests", () => {
         sort: jest.fn().mockResolvedValue([]),
       });
 
-      const response = await request(app).get("/all").expect(200);
+      const response = await request(app).get("/api/all").expect(200);
 
       expect(response.body).toEqual([]);
     });
@@ -154,7 +154,7 @@ describe("API tests", () => {
     test("should delete all conversions", async () => {
       mockConversion.deleteMany.mockResolvedValue({ deletedCount: 2 });
 
-      const response = await request(app).delete("/remove").expect(200);
+      const response = await request(app).delete("/api/remove").expect(200);
 
       expect(response.body).toEqual({
         message: "All records deleted successfully.",
@@ -165,7 +165,7 @@ describe("API tests", () => {
     test("should return 0 if no records to delete", async () => {
       mockConversion.deleteMany.mockResolvedValue({ deletedCount: 0 });
 
-      const response = await request(app).delete("/remove").expect(200);
+      const response = await request(app).delete("/api/remove").expect(200);
 
       expect(response.body).toEqual({
         message: "All records deleted successfully.",
