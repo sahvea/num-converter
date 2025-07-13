@@ -4,8 +4,14 @@
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "es6"
     ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
