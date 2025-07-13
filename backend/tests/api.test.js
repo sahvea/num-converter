@@ -17,47 +17,6 @@ describe("API tests", () => {
   });
 
   describe("GET /roman/:inputValue", () => {
-    test("should convert Arabic number to Roman numeral", async () => {
-      mockConversion.findOne.mockResolvedValue(null);
-      mockConversion.create.mockResolvedValue({
-        inputValue: "5",
-        convertedValue: "V",
-        conversionType: "arabic-to-roman",
-      });
-
-      const response = await request(app).get("/api/roman/5").expect(200);
-
-      expect(response.body).toEqual({
-        inputValue: 5,
-        convertedValue: "V",
-      });
-    });
-
-    test("should return 400 for invalid number", async () => {
-      await request(app).get("/api/roman/abc").expect(400);
-    });
-
-    test("should return 400 for number greater than 3999", async () => {
-      await request(app).get("/api/roman/4000").expect(400);
-    });
-
-    test("should return cached result", async () => {
-      mockConversion.findOne.mockResolvedValue({
-        inputValue: "10",
-        convertedValue: "X",
-        conversionType: "arabic-to-roman",
-      });
-
-      const response = await request(app).get("/api/roman/10").expect(200);
-
-      expect(response.body).toEqual({
-        inputValue: 10,
-        convertedValue: "X",
-      });
-    });
-  });
-
-  describe("GET /arabic/:inputValue", () => {
     test("should convert Roman numeral to Arabic number", async () => {
       mockConversion.findOne.mockResolvedValue(null);
       mockConversion.create.mockResolvedValue({
@@ -66,7 +25,7 @@ describe("API tests", () => {
         conversionType: "roman-to-arabic",
       });
 
-      const response = await request(app).get("/api/arabic/V").expect(200);
+      const response = await request(app).get("/api/roman/V").expect(200);
 
       expect(response.body).toEqual({
         inputValue: "V",
@@ -82,7 +41,7 @@ describe("API tests", () => {
         conversionType: "roman-to-arabic",
       });
 
-      const response = await request(app).get("/api/arabic/v").expect(200);
+      const response = await request(app).get("/api/roman/v").expect(200);
 
       expect(response.body).toEqual({
         inputValue: "v",
@@ -91,7 +50,7 @@ describe("API tests", () => {
     });
 
     test("should return 400 for invalid Roman numeral", async () => {
-      await request(app).get("/api/arabic/ABC").expect(400);
+      await request(app).get("/api/roman/ABC").expect(400);
     });
 
     test("should return cached result", async () => {
@@ -101,11 +60,52 @@ describe("API tests", () => {
         conversionType: "roman-to-arabic",
       });
 
-      const response = await request(app).get("/api/arabic/X").expect(200);
+      const response = await request(app).get("/api/roman/X").expect(200);
 
       expect(response.body).toEqual({
         inputValue: "X",
         convertedValue: 10,
+      });
+    });
+  });
+
+  describe("GET /arabic/:inputValue", () => {
+    test("should convert Arabic number to Roman numeral", async () => {
+      mockConversion.findOne.mockResolvedValue(null);
+      mockConversion.create.mockResolvedValue({
+        inputValue: "5",
+        convertedValue: "V",
+        conversionType: "arabic-to-roman",
+      });
+
+      const response = await request(app).get("/api/arabic/5").expect(200);
+
+      expect(response.body).toEqual({
+        inputValue: 5,
+        convertedValue: "V",
+      });
+    });
+
+    test("should return 400 for invalid number", async () => {
+      await request(app).get("/api/arabic/abc").expect(400);
+    });
+
+    test("should return 400 for number greater than 3999", async () => {
+      await request(app).get("/api/arabic/4000").expect(400);
+    });
+
+    test("should return cached result", async () => {
+      mockConversion.findOne.mockResolvedValue({
+        inputValue: "10",
+        convertedValue: "X",
+        conversionType: "arabic-to-roman",
+      });
+
+      const response = await request(app).get("/api/arabic/10").expect(200);
+
+      expect(response.body).toEqual({
+        inputValue: 10,
+        convertedValue: "X",
       });
     });
   });
