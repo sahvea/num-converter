@@ -7,6 +7,12 @@ const ALLOWED_CORS = [
   "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:8080",
+  "http://localhost:80",
+  "http://localhost",
+  "http://frontend:80",
+  "http://frontend",
+  "http://nginx:80",
+  "http://nginx",
 ];
 
 const CORS_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"];

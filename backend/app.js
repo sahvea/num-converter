@@ -21,6 +21,8 @@ const limiter = require("./middlewares/limiter");
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -33,7 +35,13 @@ app.use(helmet());
 app.use(
   cors({
     origin(origin, callback) {
-      if (ALLOWED_CORS.includes(origin) || !origin) {
+      if (
+        !origin ||
+        ALLOWED_CORS.includes(origin) ||
+        origin.startsWith("http://localhost") ||
+        origin.startsWith("http://frontend") ||
+        origin.startsWith("http://nginx")
+      ) {
         callback(null, true);
       } else {
         callback(new Error(messages.corsErr));
@@ -50,7 +58,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(router);
+app.use("/api", router);
 
 app.use(errorLogger);
 app.use(errors());
