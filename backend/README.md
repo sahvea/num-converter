@@ -7,7 +7,7 @@ A small Node.js REST API server for converting Roman numerals to Arabic and the 
 - Convert Arabic numbers (1-3999) to Roman numerals
 - Convert Roman numerals to Arabic numbers
 - Caching of conversion results in MongoDB
-- Retrieve all stored conversions
+- Get all stored conversions
 - Delete all conversions from the database
 
 ## API Endpoints
@@ -80,43 +80,3 @@ Delete all conversions from the database.
   "deletedCount": 5
 }
 ```
-
-## Getting Started
-
-### Local Development
-
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Copy the example environment file:
-   ```bash
-   cp env.example .env
-   ```
-3. Start MongoDB locally or use MongoDB Atlas.
-4. Start the app:
-   ```bash
-   # Development mode
-   npm run dev
-   # Production mode
-   npm start
-   ```
-
-### Docker
-
-1. Build and run with Docker Compose:
-   ```bash
-   docker-compose up --build
-   ```
-2. The app will be available at http://localhost:3000
-
-## Testing
-
-- Run unit and API tests:
-  ```bash
-  npm test
-  ```
-- Run tests in watch mode:
-  ```bash
-  npm run test:watch
-  ```
