@@ -80,46 +80,75 @@ export const Converter = ({ type }: ConverterProps) => {
     setError("");
   }, []);
 
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      handleConversion();
+    },
+    [handleConversion]
+  );
+
   const isInputValid = inputValue.trim() !== "" && error === "";
 
   return (
     <section className="space-y-4">
-      <div className="space-y-2">
-        <Input
-          type="text"
-          placeholder={
-            type === "roman-to-arabic"
-              ? "Enter Roman numeral (e.g., XIV)"
-              : "Enter Arabic number (e.g., 14)"
-          }
-          value={inputValue}
-          disabled={isLoading}
-          className="w-full"
-          onKeyDown={handleKeyPress}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <label htmlFor="converter-input" className="sr-only">
+            {type === "roman-to-arabic" ? "Roman numeral" : "Arabic number"}
+          </label>
+          <Input
+            id="converter-input"
+            type="text"
+            placeholder={
+              type === "roman-to-arabic"
+                ? "Enter Roman numeral (e.g., XIV)"
+                : "Enter Arabic number (e.g., 14)"
+            }
+            value={inputValue}
+            disabled={isLoading}
+            className="w-full"
+            onKeyDown={handleKeyPress}
+            onChange={(e) => setInputValue(e.target.value)}
+            aria-describedby={error ? "error-message" : undefined}
+          />
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
-      </div>
+          {error && (
+            <p id="error-message" className="text-sm text-red-500" role="alert">
+              {error}
+            </p>
+          )}
+        </div>
 
-      <div className="flex gap-2">
-        <Button
-          disabled={!isInputValid || isLoading}
-          className="flex-1"
-          onClick={handleConversion}
-        >
-          {isLoading ? "Converting..." : "Convert"}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            type="submit"
+            disabled={!isInputValid || isLoading}
+            className="flex-1"
+          >
+            {isLoading ? "Converting..." : "Convert"}
+          </Button>
 
-        <Button variant="outline" disabled={isLoading} onClick={handleClear}>
-          Clear
-        </Button>
-      </div>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={isLoading}
+            onClick={handleClear}
+          >
+            Clear
+          </Button>
+        </div>
+      </form>
 
       {result && (
         <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
           <p className="text-sm text-green-600 font-medium">Result:</p>
-          <p className="text-lg font-semibold text-green-800">{result}</p>
+          <p
+            className="text-lg font-semibold text-green-800"
+            aria-live="polite"
+          >
+            {result}
+          </p>
         </div>
       )}
     </section>
